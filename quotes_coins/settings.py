@@ -124,4 +124,16 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static') 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",  # Use "redis://redis:6379/1" se estiver usando o Docker Compose
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# Use Redis as the default broker for Celery
+CELERY_BROKER_URL = 'redis://redis:6379/0'  # Use "redis://redis:6379/0" se estiver usando o Docker Compose
+CELERY_RESULT_BACKEND = 'redis://redis:6379/0'  # Use "redis://redis:6379/0" se estiver usando o Docker Compose
