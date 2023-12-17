@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Gráfico de Cotações{% endblock %}</title>
+
+        <!-- Adicione links para seus arquivos estáticos (CSS, JavaScript, etc.) aqui -->
+        {% load static %}
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+        <!-- jQuery UI com localização em português -->
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/modules/series-label.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+        
+        <!-- Inclua o CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+        
+        <!-- Inclua o JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        
+    </head>
+    <body>
+
+        <header>
+            <h1 class="header-quotes">{% block header %}Flutuações Cambiais em Tempo Real{% endblock %}</h1>
+            <!-- Adicione elementos do cabeçalho aqui -->
+        </header>
+
+        <nav>
+            <!-- Adicione seu menu de navegação aqui -->
+        </nav>
+
+        <main>
+            {% block content %}
+                <input type="hidden" id="jsonDataInput" value="{{resultados}}">
+                <input type="hidden" id="moeda" value="{{moeda}}">
+                <div class="form-style">
+                    <form id="meuFormulario" class="flex" method="post" action="{% url 'quote_list' %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <!-- Inicialização do DatePicker -->
+                        <script>
+                            $(function () {
+                                $(".data_inicial").datepicker({
+                                    format: "dd/mm/yy",
+                                    autoclose: true,
+                                    zIndexOffset: 1000,
+                                    maxDate: 0,
+                                    beforeShowDay: function(date) {
+                                        var day = date.getDay();
+                                        // Desativar sábados (6) e domingos (0)
+                                        return [day != 6 && day != 0, ''];
+                                    },
+                                    onSelect: function(selectedDate) {
+                                        // Preencher o campo de data inicial com a data selecionada
+                                        $(".data_inicial").val(selectedDate);
+    
+                                        // Ativar o campo de data final quando a data inicial é selecionada
+                                        $(".data_final").prop("disabled", false);
+    
+                                        // Configurar a data mínima do segundo DatePicker para 5 dias úteis após a data inicial
+                                        var dataInicial = $(this).datepicker('getDate');
+                                        var dataFinalMaxima = calcularDataFinalMaxima(dataInicial);
+                                        $(".data_final").datepicker("option", "maxDate", dataFinalMaxima);
+                                        $(".data_final").datepicker("option", "minDate", selectedDate);
+    
+                                    }
+                                }).prop("readonly", true);
+                                $(".data_final").datepicker({
+                                    format: "dd/mm/yy",
+                                    autoclose: true,
+                                    zIndexOffset: 1000,
+                                    maxDate: 0,
+                                    beforeShowDay: function(date) {
+                                        var day = date.getDay();
+                                        // Desativar sábados (6) e domingos (0)
+                                        return [day != 6 && day != 0, ''];
+                                    }
+                                }).prop("disabled", true).prop("readonly", true);
+                                
+                                // Função para calcular a data final mínima (5 dias úteis após a data inicial)
+                                function calcularDataFinalMaxima(dataInicial) {
+                                    var dataFinalMaxima = new Date(dataInicial);
+                                    var diasUteisRestantes = 4;
+    
+                                    while (diasUteisRestantes > 0) {
+                                        dataFinalMaxima.setDate(dataFinalMaxima.getDate() + 1);
+    
+                                        // Verificar se o dia é um dia útil (segunda a sexta-feira)
+                                        if (dataFinalMaxima.getDay() !== 0 && dataFinalMaxima.getDay() !== 6) {
+                                            diasUteisRestantes--;
+                                        }
+                                    }
+
+                                    // Impede exibição de dias do futuro
+                                    var dataAtual = new Date();
+                                    if (dataAtual < dataFinalMaxima) {
+                                        return dataAtual
+                                    } else {
+                                        return dataFinalMaxima;
+                                    }
+                                }
+                            });
+                        </script>
+                        <button id="button" class="btn btn-primary" type="submit" disabled>Gerar Cotação</button>
+                    </form>
+                </div>
+                <figure class="highcharts-figure">
+                    <div id="container"></div>
+                    <p class="highcharts-description">
+                        <!-- Legenda de rodapé do gráfico aqui. -->
+                    </p>
+                </figure>
+            {% endblock %}
+        </main>
+
+        <footer>
+            <!-- Adicione elementos do rodapé aqui -->
+        </footer>
+
+        <!-- Adicione links para seus arquivos JavaScript aqui -->
+        <script src="{% static 'js/scripts/quotes.js' %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/quotes.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/highcharts.css' %}">
+
+    </body>
+</html>

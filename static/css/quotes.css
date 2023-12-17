@@ -1,0 +1,117 @@
+.header-quotes{
+    margin-top: 1%;
+    margin-bottom: 1%;
+    text-align-last: center;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 2em;
+    color: rgb(51, 51, 51);
+    font-weight: bold;
+    fill: rgb(51, 51, 51);
+}
+
+/* Exemplo de estilo para ajustar a largura do calendário */
+.flatpickr-calendar {
+    width: 300px;
+}
+
+.calendarios{
+    justify-content: center;
+    display: flex;
+}
+
+.data_fim{
+    margin-left: 30px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+textarea {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+#ui-datepicker-div{
+    background-color: #fff;
+}
+
+.flex{
+	display: flex;
+	justify-content: space-evenly;
+    max-width: 1200px;
+}
+
+.btn{
+    height: 38px !important;
+    width: 127px !important;
+    margin-top: 32px !important;
+}
+
+.highcharts-loading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.highcharts-loading-inner {
+    border: 10px solid #f3f3f3; /* Light grey */
+    border-top: 10px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 90px;
+    height: 90px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.form-style{
+    text-align: -webkit-center;
+}
+
+.data_inicial {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.data_final {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + 0.75rem + 2px);
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    overflow-y: hidden;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle, #ffffff, #eaf7fc); /* Define o gradiente redondo de azul claro para branco */
+}

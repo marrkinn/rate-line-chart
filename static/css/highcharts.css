@@ -1,0 +1,17 @@
+.highcharts-figure,
+.highcharts-data-table table {
+    min-width: 600px;
+    max-width: 1200px;
+    margin: 1em auto;
+    border-radius: 0.25rem;
+}
+.highcharts-container {
+    min-height: 550px;
+}
+.highcharts-root{
+    font-size: 1.5rem !important;
+}
+
+#container{
+    border-radius: 0.5rem;
+}
