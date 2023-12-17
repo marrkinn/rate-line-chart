@@ -8,6 +8,9 @@ import requests
 from django.http import JsonResponse
 import pandas as pd
 from datetime import datetime, timedelta
+from django.core.cache import cache
+import redis
+import json
 
 # Função principal renderiza template
 def quote_list(request):
@@ -66,12 +69,23 @@ def chamada_urls_com_intervalo(base_url, data_inicial, data_final):
     for data in datas_no_intervalo:
         url = f"{base_url}&date={data.strftime('%Y-%m-%d')}"
         
+        # Pegando o dado no cache para a chave url
+        dados_do_cache = cache.get(url)
+
         try:
-            response = requests.get(url)
-            response.raise_for_status()  # Verifica se houve erros na resposta
+            # Testando se tem cache para a url selecionada
+            if dados_do_cache is not None:
+                response = dados_do_cache
+            else:
+                response = requests.get(url)
+                response.raise_for_status()  # Verifica se houve erros na resposta
 
             # Adiciona os dados da resposta à lista de resultados (apenas dias úteis)
             if response.json() not in resultados:
+                # Setando o cache para a nova url
+                cache.set(url, response, 900)
+
+                # Adicionando o json na lista
                 resultados.append(response.json())
 
         except requests.exceptions.RequestException as e:
